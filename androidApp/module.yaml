@@ -1,0 +1,15 @@
+product: android/app
+
+dependencies:
+  - //shared
+  - $libs.androidx.activity.compose
+  - $libs.koin.android
+  - $libs.koin.core
+  - $compose.preview
+  - $compose.uiTooling
+
+settings:
+  compose: enabled
+  android:
+    namespace: com.kotlinconf.workshop.househelper
+    applicationId: com.kotlinconf.workshop.househelper

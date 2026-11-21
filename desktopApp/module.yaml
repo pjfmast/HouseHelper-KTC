@@ -1,0 +1,31 @@
+product: jvm/app
+
+dependencies:
+  - //shared
+  - $compose.desktop.currentOs
+  - $compose.preview
+  - $libs.koin.core
+  - $libs.koin.compose.viewmodel
+  - $libs.kotlinx.coroutines.swing
+  - $libs.logback.classic
+  - org.openjfx:javafx-base:23.0.2:win
+  - org.openjfx:javafx-base:23.0.2:mac
+  - org.openjfx:javafx-base:23.0.2:mac-aarch64
+  - org.openjfx:javafx-base:23.0.2:linux
+  - org.openjfx:javafx-graphics:23.0.2:win
+  - org.openjfx:javafx-graphics:23.0.2:mac
+  - org.openjfx:javafx-graphics:23.0.2:mac-aarch64
+  - org.openjfx:javafx-graphics:23.0.2:linux
+  - org.openjfx:javafx-swing:23.0.2:win
+  - org.openjfx:javafx-swing:23.0.2:mac
+  - org.openjfx:javafx-swing:23.0.2:mac-aarch64
+  - org.openjfx:javafx-swing:23.0.2:linux
+  - org.openjfx:javafx-media:23.0.2:win
+  - org.openjfx:javafx-media:23.0.2:mac
+  - org.openjfx:javafx-media:23.0.2:mac-aarch64
+  - org.openjfx:javafx-media:23.0.2:linux
+
+settings:
+  compose: enabled
+  jvm:
+    mainClass: com.kotlinconf.workshop.househelper.MainKt
