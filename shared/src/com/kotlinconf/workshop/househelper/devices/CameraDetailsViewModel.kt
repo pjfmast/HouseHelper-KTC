@@ -1,15 +1,39 @@
 package com.kotlinconf.workshop.househelper.devices
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kotlinconf.workshop.househelper.CameraDevice
 import com.kotlinconf.workshop.househelper.DeviceId
 import com.kotlinconf.workshop.househelper.data.HouseService
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class CameraDetailsViewModel(
     private val houseService: HouseService,
-    private val deviceId: DeviceId,
+    @InjectedParam private val deviceId: DeviceId,
 ) : ViewModel() {
+    val camera: StateFlow<CameraDevice?> = houseService.getCamera(deviceId)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
-    // TODO Task 5: Implement ViewModel features here
+    val cameraFootage: StateFlow<String?> = houseService.getCameraFootage(deviceId)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
-    // TODO Task 8: Set up Koin ViewModel injection with @KoinViewModel and @InjectedParam
+    fun toggleCamera() {
+        viewModelScope.launch {
+            houseService.toggle(deviceId)
+        }
+    }
 }

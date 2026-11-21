@@ -1,18 +1,25 @@
 package com.kotlinconf.workshop.househelper.dashboard
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotlinconf.workshop.househelper.Device
 import com.kotlinconf.workshop.househelper.RoomId
 import com.kotlinconf.workshop.househelper.data.HouseService
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.KoinViewModel
 
+@KoinViewModel
 class RoomViewModel(
     private val houseService: HouseService,
-    private val roomId: RoomId,
+    @InjectedParam private val roomId: RoomId,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val devices: StateFlow<List<Device>> = houseService
@@ -29,5 +36,10 @@ class RoomViewModel(
         }
     }
 
-    // TODO Task 8: Set up Koin ViewModel injection with @KoinViewModel and @InjectedParam
+    private val _expanded = savedStateHandle.getMutableStateFlow("expanded", true)
+    val expanded = _expanded.asStateFlow()
+
+    fun expand(isExpanded: Boolean) {
+        _expanded.value = isExpanded
+    }
 }

@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.kotlinconf.workshop.househelper.DeviceId
 import com.kotlinconf.workshop.househelper.LightDevice
@@ -11,6 +13,8 @@ import com.kotlinconf.workshop.househelper.Room
 import com.kotlinconf.workshop.househelper.RoomId
 import com.kotlinconf.workshop.househelper.ThermostatDevice
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
 class RoomSectionTest {
@@ -53,12 +57,23 @@ class RoomSectionTest {
             )
         }
 
-        // TODO Task 18: implement test
-
         // Initially collapsed
+        onNode(hasText("Test Light")).assertDoesNotExist()
+
         // Click on the room header to expand
+        onNode(hasText("Test Room")).performClick()
+        assertTrue(expanded)
+
         // Verify devices are now visible
+        onNode(hasText("Test Light")).assertExists()
+        onNode(hasText("Test Thermostat")).assertExists()
+
         // Click again to collapse
+        onNode(hasText("Test Room")).performClick()
+        assertFalse(expanded)
+
         // Verify devices are hidden again
+        onNode(hasText("Test Light")).assertDoesNotExist()
+        onNode(hasText("Test Thermostat")).assertDoesNotExist()
     }
 }

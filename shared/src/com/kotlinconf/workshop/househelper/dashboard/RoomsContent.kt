@@ -1,8 +1,13 @@
 package com.kotlinconf.workshop.househelper.dashboard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,15 +16,21 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
@@ -38,15 +49,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.createSavedStateHandle
 import com.kotlinconf.workshop.househelper.CameraDevice
 import com.kotlinconf.workshop.househelper.Device
 import com.kotlinconf.workshop.househelper.DeviceConstants
@@ -58,9 +71,14 @@ import com.kotlinconf.workshop.househelper.RoomId
 import com.kotlinconf.workshop.househelper.SwitchDevice
 import com.kotlinconf.workshop.househelper.ThermostatDevice
 import com.kotlinconf.workshop.househelper.Toggleable
-import com.kotlinconf.workshop.househelper.data.DemoHouseService
 import com.kotlinconf.workshop.househelper.utils.onRightClick
+import househelper.shared.generated.resources.Res
+import househelper.shared.generated.resources.dashboard_section_collapsed
+import househelper.shared.generated.resources.dashboard_section_expanded
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
 @Composable
@@ -69,26 +87,25 @@ fun RoomsContent(
     onNavigateToLightDetails: (DeviceId) -> Unit,
     onNavigateToCameraDetails: (DeviceId) -> Unit,
 ) {
-    // TODO Task 15: update content inset
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues(),
     ) {
         items(rooms) { room ->
-            // TODO Task 8: use Koin APIs
-            val roomViewModel: RoomViewModel = viewModel(key = room.id.value) {
-                RoomViewModel(DemoHouseService(), room.id)
+            val roomViewModel = koinViewModel<RoomViewModel>(
+                key = room.id.value
+            ) {
+                parametersOf(room.id)
             }
             val devices by roomViewModel.devices.collectAsStateWithLifecycle()
-
-            // TODO Task 3: introduce proper state for expanding sections
-            var expanded = true
+            val expanded by roomViewModel.expanded.collectAsStateWithLifecycle()
 
             RoomSection(
                 room = room,
                 expanded = expanded,
                 devices = devices,
                 onExpand = { isExpanded ->
-                    // TODO Task 3: update expanded state here
+                    roomViewModel.expand(isExpanded)
                 },
                 onClick = { device -> roomViewModel.onDeviceClicked(device) },
                 onLongClick = { device ->
@@ -118,21 +135,33 @@ internal fun RoomSection(
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
+        val stateDesc = stringResource(
+            if (expanded) Res.string.dashboard_section_expanded
+            else Res.string.dashboard_section_collapsed
+        )
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onExpand(!expanded) } // TODO Task 17: improve accessibility
+                .toggleable(
+                    value = expanded,
+                    onValueChange = onExpand,
+                )
+                .semantics {
+                    stateDescription = stateDesc
+                    heading()
+                }
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val rotation by animateFloatAsState(if (expanded) 0f else -90f)
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .graphicsLayer {
-                        // TODO Task 11: animate rotation
-                        rotationZ = if (expanded) 0f else -90f
+                        rotationZ = rotation
                     }
             )
             Text(
@@ -140,9 +169,11 @@ internal fun RoomSection(
                 style = MaterialTheme.typography.titleLarge,
             )
         }
-
-        // TODO Task 12: animate visibility change
-        if (expanded) {
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut(),
+        ) {
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -174,17 +205,14 @@ private fun DeviceCard(
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             if (device is LightDevice) {
+                val height by animateFloatAsState(
+                    if (!device.isOn) 0f
+                    else (device.brightness.toFloat() / DeviceConstants.Light.MAX_BRIGHTNESS)
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(
-                            // TODO Task 11: animate height change
-                            if (!device.isOn) {
-                                0f
-                            } else {
-                                (device.brightness.toFloat() / DeviceConstants.Light.MAX_BRIGHTNESS)
-                            }
-                        )
+                        .fillMaxHeight(height)
                         .background(device.color.copy(alpha = 0.3f))
                         .align(Alignment.BottomCenter)
                 )
@@ -296,7 +324,7 @@ private fun DeviceCardContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .semantics { // TODO Task 17: merge semantics here
+            .semantics(mergeDescendants = true) {
                 if (device is Toggleable) {
                     role = Role.Switch
                     toggleableState = ToggleableState(device.isOn)
