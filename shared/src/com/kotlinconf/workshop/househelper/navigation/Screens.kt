@@ -3,10 +3,10 @@ package com.kotlinconf.workshop.househelper.navigation
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.kotlinconf.workshop.househelper.DeviceId
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 
 @Serializable
 sealed interface Screen : NavKey
@@ -23,25 +23,11 @@ sealed interface Screen : NavKey
 @Serializable data class RenameDevice(val deviceId: DeviceId) : Screen
 
 // Centrale configuratie voor veilige state restoration over procesherstarts
+@OptIn(ExperimentalSerializationApi::class)
 val houseHelperSavedStateConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
-            subclass(OnboardingWelcome::class, OnboardingWelcome.serializer())
-            subclass(OnboardingAbout::class, OnboardingAbout.serializer())
-            subclass(OnboardingDone::class, OnboardingDone.serializer())
-            subclass(Dashboard::class, Dashboard.serializer())
-            subclass(LightDetails::class, LightDetails.serializer())
-            subclass(CameraDetails::class, CameraDetails.serializer())
-            subclass(RenameDevice::class, RenameDevice.serializer())
-        }
-        polymorphic(Screen::class) {
-            subclass(OnboardingWelcome::class, OnboardingWelcome.serializer())
-            subclass(OnboardingAbout::class, OnboardingAbout.serializer())
-            subclass(OnboardingDone::class, OnboardingDone.serializer())
-            subclass(Dashboard::class, Dashboard.serializer())
-            subclass(LightDetails::class, LightDetails.serializer())
-            subclass(CameraDetails::class, CameraDetails.serializer())
-            subclass(RenameDevice::class, RenameDevice.serializer())
+            subclassesOfSealed<Screen>()
         }
     }
 }

@@ -16,7 +16,7 @@ dependencies:
   - $libs.androidx.lifecycle.runtime.compose
   - $libs.androidx.navigation3.ui
   - $libs.androidx.lifecycle.viewmodel.navigation3
-  - $kotlin.serialization.json
+  - $libs.kotlinx.serialization.core
   - $libs.koin.core
   - $libs.koin.compose.viewmodel
   - $libs.koin.annotations
@@ -25,6 +25,9 @@ dependencies:
 
 dependencies@android:
   - $compose.uiTooling
+  # Use the latest stable Navigation 3 artifacts on Android; multiplatform targets use JetBrains 1.2.0.
+  - $libs.androidx.navigation3.android.runtime
+  - $libs.androidx.navigation3.android.ui
   - $libs.ktor.client.okhttp
   - $libs.koin.android
 
