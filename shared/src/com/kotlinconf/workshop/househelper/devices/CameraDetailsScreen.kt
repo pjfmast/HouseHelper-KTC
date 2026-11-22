@@ -57,7 +57,7 @@ fun CameraDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { device.let { Text(text = it.name) } },
+                title = { device?.let { Text(text = it.name) } },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
@@ -65,7 +65,7 @@ fun CameraDetailsScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { device.deviceId.let { onNavigateToRename(it) } }
+                        onClick = { device?.deviceId?.let { onNavigateToRename(it) } }
                     ) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit name")
                     }
@@ -80,7 +80,7 @@ fun CameraDetailsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            device.let { camera ->
+            device?.let { camera ->
                 Switch(
                     checked = camera.isOn,
                     onCheckedChange = {
