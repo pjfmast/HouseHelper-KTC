@@ -29,5 +29,13 @@ Run the project's tests with `./kotlin test`, or `./kotlin test -m <module>` for
 
 ---
 
+### License & Attribution
+
+This project is a migrated version of the original [kropp/HouseHelper](https://github.com/kropp/HouseHelper) project, ported to the Kotlin Toolchain (KTC).
+
+The codebase is distributed under the terms of the Creative Commons Attribution-ShareAlike 4.0 International Public License (CC BY-SA 4.0). See [LICENSE.txt](./LICENSE.txt) for the full license text.
+
+---
+
 Learn more
 about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html), [Kotlin Toolchain](https://kotlin-toolchain.org/dev/), [Compose Multiplatform](https://kotlinlang.org/compose-multiplatform/), [Kotlin/Wasm](https://kotl.in/wasm/).
