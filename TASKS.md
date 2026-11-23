@@ -78,9 +78,9 @@ This document provides a comprehensive guide to all core tasks (**Tasks 1–18**
 
 ### Task 9: Add Navigation to Rename Screen
 - **Objective**: Enable users to initiate device renaming from device cards via secondary actions (long press / right click or context button).
-- **Key Changes**: Define the `RenameDevice` navigation route in `Screens.kt` and trigger navigation from `RoomsContent.kt`.
+- **Key Changes**: Define the `RenameDevice` navigation route in `Routes.kt` and trigger navigation from `RoomsContent.kt`.
 - **Key Files**:
-  - `shared/src/commonMain/kotlin/.../househelper/Screens.kt`
+  - `shared/src/commonMain/kotlin/.../househelper/navigation/Routes.kt`
   - `shared/src/commonMain/kotlin/.../househelper/dashboard/RoomsContent.kt`
   - `shared/src/commonMain/kotlin/.../househelper/App.kt`
 

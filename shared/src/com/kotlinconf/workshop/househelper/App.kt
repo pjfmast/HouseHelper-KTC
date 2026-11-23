@@ -19,13 +19,13 @@ import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSe
 import com.kotlinconf.workshop.househelper.dashboard.DashboardScreen
 import com.kotlinconf.workshop.househelper.devices.CameraDetailsScreen
 import com.kotlinconf.workshop.househelper.devices.LightDetailsScreen
-import com.kotlinconf.workshop.househelper.navigation.CameraDetails
-import com.kotlinconf.workshop.househelper.navigation.Dashboard
-import com.kotlinconf.workshop.househelper.navigation.LightDetails
-import com.kotlinconf.workshop.househelper.navigation.OnboardingAbout
-import com.kotlinconf.workshop.househelper.navigation.OnboardingDone
-import com.kotlinconf.workshop.househelper.navigation.OnboardingWelcome
-import com.kotlinconf.workshop.househelper.navigation.Screen
+import com.kotlinconf.workshop.househelper.navigation.Route.CameraDetails
+import com.kotlinconf.workshop.househelper.navigation.Route.Dashboard
+import com.kotlinconf.workshop.househelper.navigation.Route.LightDetails
+import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingAbout
+import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingDone
+import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingWelcome
+import com.kotlinconf.workshop.househelper.navigation.Route
 import househelper.shared.generated.resources.Res
 import househelper.shared.generated.resources.onboarding_about
 import househelper.shared.generated.resources.onboarding_done
@@ -47,7 +47,7 @@ fun navigateToDeepLink(uri: String) {
     // TODO Bonus Task 3: parse deep links
 }
 
-private val deeplinkRequests = Channel<Screen>(capacity = 1)
+private val deeplinkRequests = Channel<Route>(capacity = 1)
 
 @Composable
 fun App() {
@@ -58,7 +58,7 @@ fun App() {
             color = MaterialTheme.colorScheme.background
         ) {
                 val backStack = rememberSerializable(serializer = SnapshotStateListSerializer()) {
-                    mutableStateListOf<Screen>(OnboardingWelcome)
+                    mutableStateListOf<Route>(OnboardingWelcome)
                 }
 
                 // TODO Bonus Task 3: receive and handle deep link requests
