@@ -29,14 +29,14 @@ import com.kotlinconf.workshop.househelper.dashboard.DashboardScreen
 import com.kotlinconf.workshop.househelper.devices.CameraDetailsScreen
 import com.kotlinconf.workshop.househelper.devices.LightDetailsScreen
 import com.kotlinconf.workshop.househelper.devices.RenameDeviceScreen
-import com.kotlinconf.workshop.househelper.navigation.CameraDetails
-import com.kotlinconf.workshop.househelper.navigation.Dashboard
-import com.kotlinconf.workshop.househelper.navigation.LightDetails
-import com.kotlinconf.workshop.househelper.navigation.OnboardingAbout
-import com.kotlinconf.workshop.househelper.navigation.OnboardingDone
-import com.kotlinconf.workshop.househelper.navigation.OnboardingWelcome
-import com.kotlinconf.workshop.househelper.navigation.RenameDevice
-import com.kotlinconf.workshop.househelper.navigation.Screen
+import com.kotlinconf.workshop.househelper.navigation.Route.CameraDetails
+import com.kotlinconf.workshop.househelper.navigation.Route.Dashboard
+import com.kotlinconf.workshop.househelper.navigation.Route.LightDetails
+import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingAbout
+import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingDone
+import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingWelcome
+import com.kotlinconf.workshop.househelper.navigation.Route.RenameDevice
+import com.kotlinconf.workshop.househelper.navigation.Route
 import com.kotlinconf.workshop.househelper.navigation.houseHelperSavedStateConfig
 import com.kotlinconf.workshop.househelper.theme.AppDarkColorScheme
 import com.kotlinconf.workshop.househelper.theme.AppLightColorScheme
@@ -65,7 +65,7 @@ fun navigateToDeepLink(uri: String) {
 }
 
 // Collating matchers with different generic types requires wildcards (official Navigation 3 pattern).
-// Every matcher uses withBackStack with Screen keys, so the cast in resolveDeepLink is safe.
+// Every matcher uses withBackStack with Route keys, so the cast in resolveDeepLink is safe.
 private val deepLinkMatchers: List<DeepLinkMatcher<*, *>> = listOf(
     UriDeepLinkMatcher(
         DeepLinkUri("househelper://light/{deviceId}"),
@@ -77,14 +77,14 @@ private val deepLinkMatchers: List<DeepLinkMatcher<*, *>> = listOf(
     ).withBackStack { listOf(Dashboard, it.key) },
 )
 
-internal fun resolveDeepLink(uri: String): List<Screen>? {
+internal fun resolveDeepLink(uri: String): List<Route>? {
     val request = DeepLinkRequest(uri)
     val result = deepLinkMatchers.mapNotNull { it.match(request) }.maxOrNull() ?: return null
     @Suppress("UNCHECKED_CAST")
-    return (result as BackStackMatchResult<*, *>).backStack as List<Screen>
+    return (result as BackStackMatchResult<*, *>).backStack as List<Route>
 }
 
-private val deeplinkRequests = Channel<List<Screen>>(capacity = 1)
+private val deeplinkRequests = Channel<List<Route>>(capacity = 1)
 
 @Composable
 fun App() {
@@ -100,14 +100,17 @@ fun App() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val backStack = rememberNavBackStack(houseHelperSavedStateConfig, OnboardingWelcome)
+            val backStack = rememberNavBackStack(
+                houseHelperSavedStateConfig,
+                OnboardingWelcome
+            )
             val dialogStrategy = remember { DialogSceneStrategy<NavKey>() }
 
             LaunchedEffect(Unit) {
                 while (true) {
-                    val screens = deeplinkRequests.receive()
+                    val routes = deeplinkRequests.receive()
                     backStack.clear()
-                    backStack.addAll(screens)
+                    backStack.addAll(routes)
                 }
             }
 

@@ -1,6 +1,9 @@
 package com.kotlinconf.workshop.househelper.navigation
 
 import com.kotlinconf.workshop.househelper.DeviceId
+import com.kotlinconf.workshop.househelper.navigation.Route.CameraDetails
+import com.kotlinconf.workshop.househelper.navigation.Route.Dashboard
+import com.kotlinconf.workshop.househelper.navigation.Route.LightDetails
 import com.kotlinconf.workshop.househelper.resolveDeepLink
 import kotlin.test.Test
 import kotlin.test.assertEquals
