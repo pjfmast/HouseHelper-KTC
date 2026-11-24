@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <!-- Background Gradient (Clean Official Android White / Cool Grey) -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F8FAFC" />
+    </linearGradient>
+
+    <!-- Drop Shadows for Cards -->
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.06" />
+    </filter>
+    <filter id="shadow-accent" x="-8%" y="-8%" width="116%" height="124%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#1A73E8" flood-opacity="0.14" />
+    </filter>
+
+    <!-- Arrow Markers in Official Palette -->
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1A73E8" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1E8E3E" />
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#E37400" />
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#5F6368" />
+    </marker>
+  </defs>
+
+  <style>
+    .title { font-family: 'Google Sans', 'Segoe UI', -apple-system, Roboto, sans-serif; font-size: 38px; font-weight: 700; fill: #202124; }
+    .subtitle { font-family: 'Roboto', 'Segoe UI', sans-serif; font-size: 18px; font-weight: 400; fill: #5F6368; }
+    .card-title { font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif; font-size: 23px; font-weight: 700; }
+    .card-tag { font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 700; text-anchor: middle; letter-spacing: 0.5px; }
+    .card-desc { font-family: 'Roboto', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 400; fill: #3C4043; }
+    .card-code { font-family: 'Consolas', 'Roboto Mono', monospace; font-size: 13.5px; font-weight: 500; }
+    .step-text { font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif; font-size: 13px; font-weight: 600; text-anchor: middle; }
+    .footer-text { font-family: 'Roboto', 'Segoe UI', sans-serif; font-size: 15px; font-weight: 400; fill: #5F6368; text-anchor: middle; }
+  </style>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)" />
+
+  <!-- Grid line subtle backdrop -->
+  <line x1="100" y1="130" x2="1820" y2="130" stroke="#E8EAED" stroke-width="1.5" />
+
+  <!-- Slide Header (Android Doc Style) -->
+  <g transform="translate(100, 55)">
+    <rect x="0" y="2" width="6" height="52" rx="3" fill="#1A73E8" />
+    <text x="22" y="32" class="title">Navigation 3 — Architectuurketen</text>
+    <text x="22" y="58" class="subtitle">Data-flow van type-safe NavKey tot gerenderde Compose Scene</text>
+  </g>
+
+  <!-- ==================== CONNECTING PATHS ==================== -->
+  <!-- 1. NavKey -> NavBackStack -->
+  <path d="M 960 235 L 960 275" stroke="#5F6368" stroke-width="2.5" marker-end="url(#arrow-gray)" />
+  <rect x="880" y="243" width="160" height="24" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1" />
+  <text x="960" y="259" class="step-text" fill="#5F6368">1. Geplaatst op</text>
+
+  <!-- 2. NavBackStack -> NavDisplay -->
+  <path d="M 960 375 L 960 415" stroke="#1A73E8" stroke-width="2.5" marker-end="url(#arrow-blue)" />
+  <rect x="865" y="383" width="190" height="24" rx="12" fill="#E8F0FE" stroke="#1A73E8" stroke-width="1" />
+  <text x="960" y="399" class="step-text" fill="#1A73E8">2. Geobserveerd door</text>
+
+  <!-- 3. NavDisplay -> EntryProvider (Left Branch) -->
+  <path d="M 800 525 C 800 570, 560 560, 560 610" fill="none" stroke="#1E8E3E" stroke-width="2.5" marker-end="url(#arrow-green)" />
+  <rect x="445" y="555" width="230" height="24" rx="12" fill="#E6F4EA" stroke="#1E8E3E" stroke-width="1" />
+  <text x="560" y="571" class="step-text" fill="#137333">3. Zoekt per NavKey de UI op</text>
+
+  <!-- 4. EntryProvider -> NavEntry -->
+  <path d="M 560 710 L 560 755" stroke="#1E8E3E" stroke-width="2.5" marker-end="url(#arrow-green)" />
+  <rect x="475" y="722" width="170" height="24" rx="12" fill="#E6F4EA" stroke="#1E8E3E" stroke-width="1" />
+  <text x="560" y="738" class="step-text" fill="#137333">4. Levert NavEntry's</text>
+
+  <!-- 5. NavDisplay -> SceneStrategy (Right Branch) -->
+  <path d="M 1120 525 C 1120 570, 1360 560, 1360 610" fill="none" stroke="#E37400" stroke-width="2.5" marker-end="url(#arrow-orange)" />
+  <rect x="1235" y="555" width="250" height="24" rx="12" fill="#FEF7E0" stroke="#E37400" stroke-width="1" />
+  <text x="1360" y="571" class="step-text" fill="#B06000">5. Geeft List&lt;NavEntry&gt; door</text>
+
+  <!-- 6. SceneStrategy -> Scene -->
+  <path d="M 1360 710 L 1360 755" stroke="#E37400" stroke-width="2.5" marker-end="url(#arrow-orange)" />
+  <rect x="1265" y="722" width="190" height="24" rx="12" fill="#FEF7E0" stroke="#E37400" stroke-width="1" />
+  <text x="1360" y="738" class="step-text" fill="#B06000">6. Berekent Scene layout</text>
+
+  <!-- 7. NavEntry -> Scene (Horizontal flow into final Scene) -->
+  <path d="M 770 820 L 1145 820" fill="none" stroke="#1A73E8" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow-blue)" />
+  <rect x="880" y="806" width="160" height="26" rx="13" fill="#E8F0FE" stroke="#1A73E8" stroke-width="1.2" />
+  <text x="960" y="823" class="step-text" fill="#1A73E8">Rendert inhoud</text>
+
+
+  <!-- ==================== BOX 1: NavKey (Green - Data / Model) ==================== -->
+  <g transform="translate(740, 145)" filter="url(#shadow)">
+    <rect width="440" height="90" rx="12" fill="#E6F4EA" stroke="#CEEAD6" stroke-width="1.5" />
+    <text x="24" y="38" class="card-title" fill="#137333">NavKey</text>
+    <rect x="310" y="20" width="105" height="22" rx="11" fill="#CEEAD6" />
+    <text x="362" y="35" class="card-tag" fill="#0D652D">DATA / ROUTE</text>
+    <text x="24" y="62" class="card-desc">Puur data-object (<tspan class="card-code" fill="#0D652D">@Serializable</tspan>, bijv. <tspan class="card-code" fill="#0D652D">Route.Dashboard</tspan>)</text>
+    <text x="24" y="80" class="card-code" fill="#188038">Identificeert het scherm en parameters</text>
+  </g>
+
+  <!-- ==================== BOX 2: NavBackStack (Blue - State Holder) ==================== -->
+  <g transform="translate(710, 280)" filter="url(#shadow)">
+    <rect width="500" height="95" rx="12" fill="#E8F0FE" stroke="#D2E3FC" stroke-width="1.5" />
+    <text x="24" y="38" class="card-title" fill="#174EA6">NavBackStack</text>
+    <rect x="375" y="20" width="100" height="22" rx="11" fill="#D2E3FC" />
+    <text x="425" y="35" class="card-tag" fill="#174EA6">STATE HOLDER</text>
+    <text x="24" y="62" class="card-desc">Observabele lijst (<tspan class="card-code" fill="#174EA6">SnapshotStateList&lt;NavKey&gt;</tspan>) met navigatiehistorie</text>
+    <text x="24" y="82" class="card-code" fill="#1A73E8">rememberNavBackStack(...) / backStack.add(...)</text>
+  </g>
+
+  <!-- ==================== BOX 3: NavDisplay (Central Hub - Android Blue Primary) ==================== -->
+  <g transform="translate(670, 420)" filter="url(#shadow-accent)">
+    <rect width="580" height="105" rx="14" fill="#FFFFFF" stroke="#1A73E8" stroke-width="2.5" />
+    <rect x="0" y="0" width="580" height="6" rx="3" fill="#1A73E8" />
+    <text x="28" y="42" class="card-title" font-size="26" fill="#1A73E8">NavDisplay</text>
+    <rect x="425" y="20" width="130" height="24" rx="12" fill="#1A73E8" />
+    <text x="490" y="36" class="card-tag" fill="#FFFFFF">CORE CONTROLLER</text>
+    <text x="28" y="68" class="card-desc">De centrale Composable container die navigatie en UI orkestreert</text>
+    <text x="28" y="90" class="card-code" fill="#174EA6">NavDisplay(backStack, sceneStrategies, entryProvider)</text>
+  </g>
+
+  <!-- ==================== BOX 4: EntryProvider (Green - Content Mapping) ==================== -->
+  <g transform="translate(340, 615)" filter="url(#shadow)">
+    <rect width="440" height="95" rx="12" fill="#E6F4EA" stroke="#CEEAD6" stroke-width="1.5" />
+    <text x="24" y="38" class="card-title" fill="#137333">EntryProvider</text>
+    <rect x="315" y="20" width="100" height="22" rx="11" fill="#CEEAD6" />
+    <text x="365" y="35" class="card-tag" fill="#0D652D">ROUTER DSL</text>
+    <text x="24" y="62" class="card-desc">Lookup-functie: zet een <tspan class="card-code" fill="#0D652D">NavKey</tspan> om naar een <tspan class="card-code" fill="#0D652D">NavEntry</tspan></text>
+    <text x="24" y="82" class="card-code" fill="#188038">entryProvider { entry&lt;Dashboard&gt; { ... } }</text>
+  </g>
+
+  <!-- ==================== BOX 5: NavEntry (Green - UI Content & Metadata) ==================== -->
+  <g transform="translate(340, 760)" filter="url(#shadow)">
+    <rect width="440" height="105" rx="12" fill="#E6F4EA" stroke="#CEEAD6" stroke-width="1.5" />
+    <text x="24" y="38" class="card-title" fill="#137333">NavEntry</text>
+    <rect x="300" y="20" width="115" height="22" rx="11" fill="#CEEAD6" />
+    <text x="357" y="35" class="card-tag" fill="#0D652D">CONTENT + META</text>
+    <text x="24" y="62" class="card-desc">Koppelt bestemming aan UI-content en optionele metadata</text>
+    <text x="24" y="84" class="card-code" fill="#188038">metadata = DialogSceneStrategy.dialog()</text>
+  </g>
+
+  <!-- ==================== BOX 6: SceneStrategy (Orange - Layout Strategy) ==================== -->
+  <g transform="translate(1140, 615)" filter="url(#shadow)">
+    <rect width="440" height="95" rx="12" fill="#FEF7E0" stroke="#FCE8B2" stroke-width="1.5" />
+    <text x="24" y="38" class="card-title" fill="#B06000">SceneStrategy</text>
+    <rect x="295" y="20" width="120" height="22" rx="11" fill="#FCE8B2" />
+    <text x="355" y="35" class="card-tag" fill="#B06000">LAYOUT STRATEGY</text>
+    <text x="24" y="62" class="card-desc">Bepaalt presentatievorm (<tspan class="card-code" fill="#B06000">SinglePane</tspan>, <tspan class="card-code" fill="#B06000">Dialog</tspan>, etc.)</text>
+    <text x="24" y="82" class="card-code" fill="#E37400">sceneStrategies = listOf(dialogStrategy)</text>
+  </g>
+
+  <!-- ==================== BOX 7: Scene (Orange - Rendered UI Scene) ==================== -->
+  <g transform="translate(1140, 760)" filter="url(#shadow)">
+    <rect width="440" height="105" rx="12" fill="#FEF7E0" stroke="#FCE8B2" stroke-width="1.5" />
+    <text x="24" y="38" class="card-title" fill="#B06000">Scene</text>
+    <rect x="315" y="20" width="100" height="22" rx="11" fill="#FCE8B2" />
+    <text x="365" y="35" class="card-tag" fill="#B06000">FINAL OUTPUT</text>
+    <text x="24" y="62" class="card-desc">Berekende UI-weergave die daadwerkelijk getoond wordt</text>
+    <text x="24" y="84" class="card-code" fill="#E37400">DialogScene / SinglePaneScene</text>
+  </g>
+
+  <!-- Bottom note badge -->
+  <g transform="translate(560, 940)">
+    <rect width="800" height="46" rx="23" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.2" />
+    <text x="400" y="29" class="footer-text">
+      Optioneel gewrapped door <tspan fill="#1A73E8" font-weight="600">NavEntryDecorator</tspan> (ViewModelStore &amp; SavedStateHolder)
+    </text>
+  </g>
+</svg>
