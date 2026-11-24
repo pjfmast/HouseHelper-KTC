@@ -22,7 +22,8 @@ sealed interface Route : NavKey {
     @Serializable data class RenameDevice(val deviceId: DeviceId) : Route
 }
 
-// Centrale configuratie voor veilige state restoration over procesherstarts
+// Central configuration for safe state restoration across process restarts
+// See: https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html#recommended-serialization-approaches
 @OptIn(ExperimentalSerializationApi::class)
 val houseHelperSavedStateConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
