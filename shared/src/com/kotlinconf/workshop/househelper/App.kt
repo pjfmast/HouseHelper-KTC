@@ -8,14 +8,12 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import com.kotlinconf.workshop.househelper.dashboard.DashboardScreen
 import com.kotlinconf.workshop.househelper.devices.CameraDetailsScreen
 import com.kotlinconf.workshop.househelper.devices.LightDetailsScreen
@@ -26,6 +24,7 @@ import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingAbout
 import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingDone
 import com.kotlinconf.workshop.househelper.navigation.Route.OnboardingWelcome
 import com.kotlinconf.workshop.househelper.navigation.Route
+import com.kotlinconf.workshop.househelper.navigation.houseHelperSavedStateConfig
 import househelper.shared.generated.resources.Res
 import househelper.shared.generated.resources.onboarding_about
 import househelper.shared.generated.resources.onboarding_done
@@ -57,9 +56,10 @@ fun App() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-                val backStack = rememberSerializable(serializer = SnapshotStateListSerializer()) {
-                    mutableStateListOf<Route>(OnboardingWelcome)
-                }
+                val backStack = rememberNavBackStack(
+                    houseHelperSavedStateConfig,
+                    OnboardingWelcome
+                )
 
                 // TODO Bonus Task 3: receive and handle deep link requests
 

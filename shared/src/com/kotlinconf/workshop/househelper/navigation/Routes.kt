@@ -1,10 +1,15 @@
 package com.kotlinconf.workshop.househelper.navigation
 
+import androidx.navigation3.runtime.NavKey
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.kotlinconf.workshop.househelper.DeviceId
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 
 @Serializable
-sealed interface Route {
+sealed interface Route : NavKey {
     // Start routes
     @Serializable data object OnboardingWelcome : Route
     @Serializable data object OnboardingAbout : Route
@@ -16,4 +21,15 @@ sealed interface Route {
     @Serializable data class CameraDetails(val deviceId: DeviceId) : Route
 
     // TODO Task 9: add new navigation class
+}
+
+// Central configuration for safe state restoration across process restarts
+// See: https://kotlinlang.org/docs/multiplatform/compose-navigation-3.html#recommended-serialization-approaches
+@OptIn(ExperimentalSerializationApi::class)
+val houseHelperSavedStateConfig = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclassesOfSealed<Route>()
+        }
+    }
 }
